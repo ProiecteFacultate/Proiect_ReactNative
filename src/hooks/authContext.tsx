@@ -1,52 +1,40 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { register } from "../api";
+import { login, register } from "../api";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+//we make this file tsx and not ts so we can use useEffect. And since we need to return smth we also add this interface
 interface IAuthContext {
-    token: string;
-    register: (email: string, password: string) => Promise<void>;
+    isAuthenticated: () => boolean;
     isLoading: boolean
-
 }
 
 const AuthContext = createContext<IAuthContext>({
-    token: '',
-    register: async () => {},
+    isAuthenticated: () => {},
     isLoading: false
 })
 
 export const AuthContextProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
 
-    const [token, setToken] = useState<string>('');
-    const [isLoading, setIsLoading] = useState(false);
+    const [accessToken, setAccessToken] = useState<string>('');
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        setIsLoading(true)
-        AsyncStorage.getItem('token')
+        AsyncStorage.getItem('accessToken')
         .then(value => {
             if (value !== null) {
-                setToken(value)
+                setAccessToken(() => value)
             }
         })
         .finally(() => {setIsLoading(false)})
     }, []);
 
-    const handleRegister = async (email: string, password: string) => {
-        try {
-            console.log(email + " " + password);
-            const result = await register(email, password);
-            console.log(result)
-            setToken(result);
-            await AsyncStorage.setItem('token', result);
-        } catch (error) {
-            console.log(error)
-        }
-    };
+    const isAuthenticated = () : boolean => {
+        return accessToken != null && accessToken != 'undefined' && accessToken !== ''
+    }
 
     return (
         <AuthContext.Provider value={{
-            token,
-            register: handleRegister,
+            isAuthenticated,
             isLoading
         }}>
             {children}
@@ -54,4 +42,4 @@ export const AuthContextProvider: React.FC<{children: React.ReactNode}> = ({chil
     )
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuthContext = () => useContext(AuthContext);
