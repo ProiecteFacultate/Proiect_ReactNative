@@ -27,8 +27,7 @@ const LoginPage = () => {
           alert("Wrong email or password")!
         else if(result.accessToken != 'undefined') { //it means login succedeed
           await AsyncStorage.setItem('accessToken', result.accessToken);
-          await AsyncStorage.setItem('email', email);
-          window.location.reload();
+          window.location.reload(); //accestToken is now in storage, so on reload we are sent to lobby
         }
         
     } catch (error) {
@@ -60,27 +59,22 @@ export default LoginPage;
 
 export const Input = styled.TextInput`
     width: 30%;
-    height: 30px;
-    border: 1px solid;
+    height: 50px; 
     margin-bottom: 10px;
     padding: 8px;
-    border: 1px solid #ccc; /* Same border style as Button */
-    border-radius: 5px; /* Matching rounded corners */
+    border: 2px solid #0aa1ff; 
+    border-radius: 5px;
     align-self: center;
 `
 
 export const Button = styled.TouchableOpacity`
-  width: 10%;
-  padding: 10px 15px; 
-  margin-bottom: 10px;
-  border: 1px solid #ccc; 
-  border-radius: 5px; 
-  color: white; 
-  text-align: center;
-  cursor: pointer;
-  transition: background-color 0.3s ease; 
-
-  &:hover {
-    background-color: #45a049; 
-  }
+    width: 10%;
+    padding: 10px 15px; 
+    margin-bottom: 10px;
+    border: 2px solid; 
+    border-radius: 5px;
+    color: white; 
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease; 
 `;

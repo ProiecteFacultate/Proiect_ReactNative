@@ -2,44 +2,111 @@ import { useEffect, useState } from "react";
 import { Container } from "../../components/BasicComponents"
 import styled from "styled-components/native";
 import { useNavigation } from "@react-navigation/native"
-import { Text } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { FlatList } from "react-native-gesture-handler";
 import { GameRouteNames } from "../../router/RouteNames"
-import { getGames } from "../../api";
+import { getAllGames } from "../../api";
+import GameListingEntry from "../../components/GameListingEntry";
+import { getUserDetails, createGame } from "../../api";
 
 const LobbyPage = () => {
   const navigation = useNavigation<any>()
+
+  const [gamesList, setGamesList] = useState<any[]>([])
+  const [userId, setUserId] = useState('')
 
   useEffect(() => {
     getGamesList()
   }, [])
 
-  const getGamesList = async () => {
+  const retrieveUserId = async () => {
     try {
-       const result = await getGames();
-       console.log("Get games list result: " + result)
-   } catch (error) {
-       console.log(error)
-   }
+      const result = await getUserDetails();
+      setUserId(() => JSON.parse(JSON.stringify(result.user)).id)
+    } catch (error) {
+        console.log(error)
+    }
   }
 
+  const getGamesList = async () => {
+    try {
+      await  retrieveUserId();
+      const result = await getAllGames();
+
+      console.log("Get games list result: " + result)
+      let games = []
+      for(let i = 0; i < result.total; i++)
+        if(result.games[i].player1Id === userId || result.games[i].player2Id === userId
+            || result.games[i].player1Id === null || result.games[i].player2Id === null)
+          games.push(result.games[i])
+      
+      setGamesList(() => games)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const createNewGame = async () => {
+    try {
+      const result = await createGame();
+
+      console.log("Create game result: " + result)
+      getGamesList()
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  
   const goToUserDetails = () => {
     navigation.navigate(GameRouteNames.USER_DETAILS)
   }
 
   return (
-    <Container>
-      <Text>LOBBBY</Text>
-      <Button onPress={goToUserDetails}>
-        <Text>Go To User Details</Text>
-      </Button>
+    <Container style={styles.mainContainer}>
+   
+      <Container style={styles.topContainer}>
+        <Button onPress={createNewGame} style={{alignItems: "center", backgroundColor: "#73bbff"}}>
+          <Text style={{fontSize: 20}}>Create game</Text>
+        </Button>
+
+        <View style={{}}>
+          <Text style={{fontSize: 30, fontWeight: "bold"}}>Games List</Text>
+        </View>
+
+        <Button onPress={goToUserDetails} style={{alignItems: "center", backgroundColor: "#73bbff"}}>
+          <Text style={{fontSize: 20}}>User Details</Text>
+        </Button>
+      </Container>
+
+      <FlatList
+        data={gamesList}
+        renderItem={(game) => (
+          <GameListingEntry game={game.item} />
+        )}
+        keyExtractor={(game) => game.id}
+        style={{marginBottom: 10}}
+      />
     </Container>
   );
 }
 
 export default LobbyPage;
 
+const styles = StyleSheet.create({
+  mainContainer: {
+    flexDirection: "column",
+    alignSelf: "center",
+    height: "100%"
+  },
 
+  topContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignSelf: "center",
+    height: "auto"
+  }
+});
 
 export const Input = styled.TextInput`
     width: 30%;
@@ -62,8 +129,4 @@ export const Button = styled.TouchableOpacity`
   text-align: center;
   cursor: pointer;
   transition: background-color 0.3s ease; 
-
-  &:hover {
-    background-color: #45a049; 
-  }
 `;

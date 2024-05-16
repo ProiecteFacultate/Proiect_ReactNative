@@ -3,6 +3,7 @@ import { GameRouteNames } from './RouteNames';
 import { Text } from 'react-native'
 import UserDetailsPage from '../pages/auth/UserDetailsPage';
 import LobbyPage from '../pages/game/LobbyPage';
+import GamePage from '../pages/game/GamePage';
 
 const GameStack = createNativeStackNavigator()
 
@@ -14,6 +15,10 @@ const GameRoutes = (
 
         <GameStack.Screen name={GameRouteNames.USER_DETAILS} component={UserDetailsPage} options={{
             headerTitle: (props) => <Text {...props}>User Details Page</Text>
+        }}/>
+
+        <GameStack.Screen name={GameRouteNames.GAME} component={GamePage} options={{
+            headerTitle: (props) => <Text {...props}>Game Page</Text>
         }}/>
     </GameStack.Navigator>
 )
