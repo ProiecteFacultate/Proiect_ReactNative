@@ -5,12 +5,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 //we make this file tsx and not ts so we can use useEffect. And since we need to return smth we also add this interface
 interface IAuthContext {
     isAuthenticated: () => boolean;
-    isLoading: boolean
 }
 
 const AuthContext = createContext<IAuthContext>({
-    isAuthenticated: () => {},
-    isLoading: false
+    isAuthenticated: () => {}
 })
 
 export const AuthContextProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
@@ -19,14 +17,20 @@ export const AuthContextProvider: React.FC<{children: React.ReactNode}> = ({chil
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
+        window.setInterval(function(){
+            checkToken()
+          }, 1000);
+    }, []);
+
+    const checkToken = () => {
         AsyncStorage.getItem('accessToken')
         .then(value => {
-            if (value !== null) {
+            if (value !== null) 
                 setAccessToken(() => value)
-            }
+            else
+                setAccessToken(() => '')
         })
-        .finally(() => {setIsLoading(false)})
-    }, []);
+    }
 
     const isAuthenticated = () : boolean => {
         return accessToken != null && accessToken != 'undefined' && accessToken !== ''
@@ -34,8 +38,15 @@ export const AuthContextProvider: React.FC<{children: React.ReactNode}> = ({chil
 
     return (
         <AuthContext.Provider value={{
-            isAuthenticated,
-            isLoading
+            isAuthenticated
+        }}>
+            {children}
+        </AuthContext.Provider>
+    )
+
+    return (
+        <AuthContext.Provider value={{
+            isAuthenticated
         }}>
             {children}
         </AuthContext.Provider>

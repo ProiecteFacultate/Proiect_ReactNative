@@ -29,7 +29,6 @@ const UserDetailsPage = () => {
 
   const logOut = async () => {
     await AsyncStorage.removeItem('accessToken');
-    window.location.reload(); //accestToken key no longer in storage, so on reload we are sent to login
   }
 
   return (
@@ -70,8 +69,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
+    alignSelf: "center",
     justifyContent: "center",
-    width: "20%",
+    width: "90%",
     marginHorizontal: "auto"
   },
 

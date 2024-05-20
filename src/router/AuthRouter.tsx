@@ -8,12 +8,12 @@ const AuthStack = createNativeStackNavigator()
 
 const AuthRoutes = (
     <AuthStack.Navigator initialRouteName={AuthRouteNames.LOGIN}>
-        <AuthStack.Screen name={AuthRouteNames.REGISTER} component={RegisterPage} options={{
-            headerTitle: (props) => <Text {...props}>Register Page</Text>
-        }}/>
-
         <AuthStack.Screen name={AuthRouteNames.LOGIN} component={LoginPage} options={{
             headerTitle: (props) => <Text {...props}>Login Page</Text>
+        }}/>
+        
+        <AuthStack.Screen name={AuthRouteNames.REGISTER} component={RegisterPage} options={{
+            headerTitle: (props) => <Text {...props}>Register Page</Text>
         }}/>
     </AuthStack.Navigator>
 )

@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
 
 
 export const Input = styled.TextInput`
-    width: 30%;
+    width: 70%;
     height: 50px; 
     margin-bottom: 10px;
     padding: 8px;
@@ -93,7 +93,7 @@ export const Input = styled.TextInput`
 `
 
 export const Button = styled.TouchableOpacity`
-    width: 10%;
+    width: 40%;
     padding: 10px 15px; 
     margin-bottom: 10px;
     border: 2px solid; 

@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { Container } from "../../components/BasicComponents"
 import styled from "styled-components/native";
 import { useNavigation } from "@react-navigation/native"
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, FlatList } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { FlatList } from "react-native-gesture-handler";
+// import { FlatList } from "react-native-gesture-handler";
 import { GameRouteNames } from "../../router/RouteNames"
 import { getAllGames } from "../../api";
 import GameListingEntry from "../../components/GameListingEntry";
@@ -34,12 +34,13 @@ const LobbyPage = () => {
       await  retrieveUserId();
       const result = await getAllGames();
 
-      console.log("Get games list result: " + result)
+      // console.log("Get games list result: " + result)
       let games = []
-      for(let i = 0; i < result.total; i++)
+      for(let i = 0; i < result.games.length; i++)
         if(result.games[i].player1Id === userId || result.games[i].player2Id === userId
-            || result.games[i].player1Id === null || result.games[i].player2Id === null)
-          games.push(result.games[i])
+            || result.games[i].player1Id === null || result.games[i].player2Id === null) {
+            games.push(result.games[i])
+          }
       
       setGamesList(() => games)
     } catch (error) {
@@ -86,6 +87,7 @@ const LobbyPage = () => {
         )}
         keyExtractor={(game) => game.id}
         style={{marginBottom: 10}}
+        contentContainerStyle={{justifyContent: "space-between", flexDirection: "column"}}
       />
     </Container>
   );
@@ -120,7 +122,7 @@ export const Input = styled.TextInput`
 `
 
 export const Button = styled.TouchableOpacity`
-  width: 10%;
+  width: 30%;
   padding: 10px 15px; 
   border: 1px solid #ccc; 
   margin-bottom: 10px;

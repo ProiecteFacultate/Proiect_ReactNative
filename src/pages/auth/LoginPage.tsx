@@ -1,15 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Container } from "../../components/BasicComponents"
 import styled from "styled-components/native";
-import { useNavigation } from "@react-navigation/native"
+import { useNavigation, useRoute } from "@react-navigation/native"
 import { Text } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { AuthRouteNames } from "../../router/RouteNames"
+import { AuthRouteNames, GameRouteNames } from "../../router/RouteNames"
 import { login } from "../../api";
 
 const LoginPage = () => {
   const navigation = useNavigation<any>()
+  const route = useRoute()
 
+  const [windowReloadKey, setWindowReloadKey] = useState(0);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -22,12 +24,11 @@ const LoginPage = () => {
 
         const result = await login(email, password);
         console.log("Login result: " + JSON.stringify(result))
-
+    
         if(result.code != 'undefined' && result.code == 403 && result.message === "User email or password do not match")
           alert("Wrong email or password")!
         else if(result.accessToken != 'undefined') { //it means login succedeed
           await AsyncStorage.setItem('accessToken', result.accessToken);
-          window.location.reload(); //accestToken is now in storage, so on reload we are sent to lobby
         }
         
     } catch (error) {
@@ -58,7 +59,7 @@ export default LoginPage;
 
 
 export const Input = styled.TextInput`
-    width: 30%;
+    width: 70%;
     height: 50px; 
     margin-bottom: 10px;
     padding: 8px;
@@ -68,7 +69,7 @@ export const Input = styled.TextInput`
 `
 
 export const Button = styled.TouchableOpacity`
-    width: 10%;
+    width: 40%;
     padding: 10px 15px; 
     margin-bottom: 10px;
     border: 2px solid; 

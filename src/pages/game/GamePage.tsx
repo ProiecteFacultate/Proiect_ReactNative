@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { Container } from "../../components/BasicComponents"
 import styled from "styled-components/native";
-import { useNavigation } from "@react-navigation/native"
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { useNavigation, useRoute } from "@react-navigation/native"
+import { View, Text, StyleSheet, FlatList } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthRouteNames } from "../../router/RouteNames"
 import { getUserDetails, getGameDetails, sendMapConfiguration } from "../../api";
-import { FlatList } from "react-native-gesture-handler";
 
 const GamePage = () => {
   const navigation = useNavigation<any>()
+  const route = useRoute()
 
   const [gameDetails, setGameDetails] = useState({})
   const [player1Email, setPlayer1Email] = useState('')
@@ -25,7 +25,7 @@ const GamePage = () => {
     try {
       const gameId = await AsyncStorage.getItem('gameId');
       const result = await getGameDetails(gameId);
-      console.log("Get game details result: " + result)
+      // console.log("Get game details result: " + result)
 
       if(JSON.parse(JSON.stringify(result.player1)) != null)
         setPlayer1Email(() => JSON.parse(JSON.stringify(result.player1)).email)

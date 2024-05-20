@@ -60,18 +60,20 @@ export default GameListingEntry;
 
 const styles = StyleSheet.create({
   container: {
-    width: "50%",
+    width: "90%",
+    height: "auto",
     justifyContent: "space-between",
     flexDirection: "row",
     alignSelf: "center",
     borderWidth: 2,
     borderColor: "#383838",
     borderRadius: 10,
+    backgroundColor: "red",
   },
 
   view: {
     flex: 1,
-    height: "100%",
+
     borderTopWidth: 0,
     borderBottomWidth: 0,
     borderRightWidth: 2,
@@ -83,8 +85,7 @@ const styles = StyleSheet.create({
 });
 
 export const Button = styled.TouchableOpacity`
-  width: 10%;
-  padding: 15px 15px; 
+  width: 20%;
   border: 1px solid #ccc; 
   border-radius: 5px; 
   color: white; 
